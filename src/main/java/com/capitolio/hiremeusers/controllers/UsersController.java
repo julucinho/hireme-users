@@ -1,6 +1,7 @@
 package com.capitolio.hiremeusers.controllers;
 
 import com.capitolio.hiremeusers.dtos.UserDto;
+import com.capitolio.hiremeusers.exceptions.UserNotFoundByIdException;
 import com.capitolio.hiremeusers.services.DeletingUsersService;
 import com.capitolio.hiremeusers.services.RetrievingUsersService;
 import com.capitolio.hiremeusers.services.SavingUsersService;
@@ -27,7 +28,7 @@ public class UsersController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> retrieveUserById(@PathVariable Long id){
-        var user = this.retrievingUsersService.retrieveUserBy(id).map(UsersMapper::toDto).orElse(new UserDto());
+        var user = this.retrievingUsersService.retrieveUserBy(id).map(UsersMapper::toDto).orElseThrow(() -> {throw new UserNotFoundByIdException(id);});
         return ResponseEntity.ok(user);
     }
 
